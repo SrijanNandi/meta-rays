@@ -4,16 +4,16 @@ Documentation=https://docs.mongodb.org/manual
 After=network.target
 
 [Service]
-User=mongod
-Group=mongod
+User=mongodb
+Group=mongodb
 Environment="OPTIONS=-f /etc/mongod.conf"
 EnvironmentFile=-/etc/sysconfig/mongod
 ExecStart=/usr/bin/mongod $OPTIONS
-ExecStartPre=/usr/bin/mkdir -p /var/run/mongodb
-ExecStartPre=/usr/bin/chown mongod:mongod /var/run/mongodb
-ExecStartPre=/usr/bin/chmod 0755 /var/run/mongodb
+ExecStartPre=/bin/mkdir -p /run/mongodb
+ExecStartPre=/bin/chown mongodb:mongodb /run/mongodb
+ExecStartPre=/bin/chmod 0755 /run/mongodb
 PermissionsStartOnly=true
-PIDFile=/var/run/mongodb/mongod.pid
+PIDFile=/run/mongodb/mongod.pid
 Type=forking
 # file size
 LimitFSIZE=infinity

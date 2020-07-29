@@ -1,0 +1,15 @@
+###############################################################################
+#                                                                             #
+#            Welcome to RayS (Ray Security Distribution)                      #
+#                                                                             #
+###############################################################################
+
+!!!! ATTENTION !!!!
+You are required to change your password immediately. Log in as root and
+change passwords of raysadmin and root.
+
+passwd root followed by passwd raysadmin
+
+All connections are monitored and recorded.
+
+Disconnect IMMEDIATELY if you are not an authorized user!!
