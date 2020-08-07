@@ -5,12 +5,13 @@ logger "Starting basic configuration"
 ## Suricata configuration changes.
 
 SURICATA_CONF_FILE="/etc/suricata/suricata.yaml"
+INT_NAME=`ip link | awk -F: '$0 !~ "lo|vir|wl|^[^0-9]"{print $2;getline}' | sort | uniq -D -w3`
 PROC_COUNT=`/usr/bin/nproc --all`
 
 declare -a array=($(echo "$INT_NAME" | tr ' ' '\n'))
 
 ITER=1
-THREADS_COUNT=$(($PROC_COUNT-2))
+THREADS_COUNT=$(($PROC_COUNT-1))
 for ((i=0; i<${#array[@]}-1; i+=2)); do
    TMP_FILE="/tmp/suricata.temp$i"
    cat << 'EOF' > $TMP_FILE
