@@ -6,12 +6,48 @@ logger "Starting basic configuration"
 
 SURICATA_CONF_FILE="/etc/suricata/suricata.yaml"
 INT_NAME=`ip link | awk -F: '$0 !~ "lo|vir|wl|^[^0-9]"{print $2;getline}' | sort | uniq -D -w3`
+INT_NAME_COUNT=`ip link | awk -F: '$0 !~ "lo|vir|wl|^[^0-9]"{print $2;getline}' | sort | uniq -D -w3 | wc -l`
 PROC_COUNT=`/usr/bin/nproc --all`
 
 declare -a array=($(echo "$INT_NAME" | tr ' ' '\n'))
 
 ITER=1
 THREADS_COUNT=$(($PROC_COUNT-1))
+if [ "$INT_NAME_COUNT" -le "1" ] || [ "$THREADS" -le "1" ]; then
+   TMP_FILE="/tmp/suricata.temp"
+   cat << 'EOF' > $TMP_FILE
+  #- interface: FIRST_INT
+  #  threads: THREADS_COUNT
+  #  cluster-id: FIRST_ID
+  #  defrag: no
+  #  cluster-type: cluster_flow
+  #  xdp-mode: driver
+  #  xdp-filter-file:  /etc/suricata/ebpf/xdp_filter.bpf
+  #  bypass: yes
+  #  copy-mode: ips
+  #  use-mmap: yes
+  #  ring-size: 500000
+  #  buffer-size: 5368709120
+  #  rollover: no
+  #  use-emergency-flush: yes
+  #  copy-iface: SECOND_INT
+  #- interface: SECOND_INT
+  #  threads: THREADS_COUNT
+  #  cluster-id: SECOND_ID
+  #  defrag: no
+  #  cluster-type: cluster_flow
+  #  xdp-mode: driver
+  #  xdp-filter-file:  /etc/suricata/ebpf/xdp_filter.bpf
+  #  bypass: yes
+  #  copy-mode: ips
+  #  use-mmap: yes
+  #  ring-size: 500000
+  #  buffer-size: 5368709120
+  #  rollover: no
+  #  use-emergency-flush: yes
+  #  copy-iface: FIRST_INT
+EOF
+else	
 for ((i=0; i<${#array[@]}-1; i+=2)); do
    TMP_FILE="/tmp/suricata.temp$i"
    cat << 'EOF' > $TMP_FILE
@@ -56,6 +92,8 @@ EOF
    ITER=$(expr $ITER + 2)
 
 done
+fi
+
 cat /tmp/suricata.temp* >> /tmp/newfile.temp
 
 if [ -f $SURICATA_CONF_FILE ]; then
@@ -71,7 +109,7 @@ rm -rf /tmp/newfile.temp*
 
 GRAYLOG_CONF="/etc/graylog/server/server.conf"
 SEC_PWD=`/usr/bin/ranpwd --alphanum --lower 96`
-ROOT_PWD=`/bin/echo -n "rays" | /usr/bin/tr -d '\n' | /usr/bin/sha256sum | /usr/bin/cut -d" " -f1`
+ROOT_PWD=`/bin/echo -n "grays" | /usr/bin/tr -d '\n' | /usr/bin/sha256sum | /usr/bin/cut -d" " -f1`
 
 if [ -f ${GRAYLOG_CONF} ]; then
 	cp -r ${GRAYLOG_CONF} ${GRAYLOG_CONF}.ORIG
