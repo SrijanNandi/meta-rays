@@ -5,8 +5,8 @@ logger "Starting basic configuration"
 ## Suricata configuration changes.
 
 SURICATA_CONF_FILE="/etc/suricata/suricata.yaml"
-INT_NAME=`ip link | awk -F: '$0 !~ "lo|vir|wl|^[^0-9]"{print $2;getline}' | sort | uniq -D -w3`
-INT_NAME_COUNT=`ip link | awk -F: '$0 !~ "lo|vir|wl|^[^0-9]"{print $2;getline}' | sort | uniq -D -w3 | wc -l`
+INT_NAME=`ip link | awk -F: '$0 !~ "lo|vir|wl|sit|^[^0-9]"{print $2;getline}' | sort | uniq -D -w3`
+INT_NAME_COUNT=`ip link | awk -F: '$0 !~ "lo|vir|wl|sit|^[^0-9]"{print $2;getline}' | sort | uniq -D -w3 | wc -l`
 PROC_COUNT=`/usr/bin/nproc --all`
 
 declare -a array=($(echo "$INT_NAME" | tr ' ' '\n'))

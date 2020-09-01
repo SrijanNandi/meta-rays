@@ -1,14 +1,11 @@
 ###############################################################################
 #                                                                             #
-#            Welcome to RayS (Ray Security Distribution)                      #
+#            Welcome to GrayS (Graylog Distribution with Suricata)            #
 #                                                                             #
 ###############################################################################
 
 !!!! ATTENTION !!!!
-You are required to change your password immediately. Log in as root and
-change passwords of raysadmin and root.
-
-passwd root followed by passwd raysadmin
+You are required to change your password immediately.
 
 All connections are monitored and recorded.
 
